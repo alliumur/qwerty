@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>qwerty</title>
-</head>
+<header th:insert="~{fragments/header :: this}"/>
 <body>
     <h1 th:inline="text">Witaj [[${#httpServletRequest.remoteUser}]]!</h1>
     <form th:action="@{/logout}" method="post">
@@ -17,8 +14,8 @@
         </form>
     </di>
     <div>
-        <form method="post" th:action="@{/filtermessage}">
-            <input name="tag" placeholder="Wpisz tag"/>
+        <form method="get" th:action="@{/index}">
+            <input name="filter" placeholder="Wpisz tag" th:value="${filter}"/>
             <button type="submit">Filtruj</button>
         </form>
     </div>

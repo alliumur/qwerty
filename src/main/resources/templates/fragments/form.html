@@ -1,0 +1,13 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="auth(actionName, btnSubmitName)">
+        <!--/*@thymesVar id="btnSubmitName" type=""*/-->
+        <!--/*@thymesVar id="actionName" type=""*/-->
+
+        <form th:action="${actionName}" method="post" >
+            <div><label> User Name : <input type="text" name="username"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" th:value="${btnSubmitName}"/></div>
+        </form>
+    </th:block>
+</body>

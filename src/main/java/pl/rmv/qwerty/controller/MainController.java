@@ -23,9 +23,16 @@ public class MainController {
     }
 
     @GetMapping("/index")
-    public String index(Model model){
-        Iterable<Message> messages = messageRepository.findAll();
+    public String index(@RequestParam(required = false) String filter, Model model){
+        Iterable<Message> messages;
+        if(filter != null && !filter.isEmpty()){
+            messages = messageRepository.findByTag(filter);
+        }else{
+            messages = messageRepository.findAll();
+        }
         model.addAttribute("messages", messages);
+        model.addAttribute("filter", filter);
+
         return "index";
     }
 
@@ -39,18 +46,6 @@ public class MainController {
             messageRepository.save(new Message(text, tag, user));
         }
         Iterable<Message> messages = messageRepository.findAll();
-        model.addAttribute("messages", messages);
-        return "index";
-    }
-
-    @PostMapping("/filtermessage")
-    public String filtermessage(@RequestParam String tag, Model model){
-        Iterable<Message> messages;
-        if(tag.isEmpty()){
-            messages = messageRepository.findAll();
-        }else{
-            messages = messageRepository.findByTag(tag);
-        }
         model.addAttribute("messages", messages);
         return "index";
     }
