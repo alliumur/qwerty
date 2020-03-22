@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>qwerty</title>
+</head>
+<body>
+    <h1 th:inline="text">Witaj [[${#httpServletRequest.remoteUser}]]!</h1>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Wyloguj"/>
+    </form>
+    <di>
+        <form method="post" th:action="@{/createmessage}">
+            <input name="text" placeholder="Wpisz treść wiadomości"/>
+            <input name="tag"  placeholder="Tagi"/>
+            <button type="submit">Dodaj</button>
+        </form>
+    </di>
+    <div>
+        <form method="post" th:action="@{/filtermessage}">
+            <input name="tag" placeholder="Wpisz tag"/>
+            <button type="submit">Filtruj</button>
+        </form>
+    </div>
+    <div>Lista powiadomień</div>
+    <div th:each="msg: ${messages}">
+        <div>
+            <b th:text="${msg.id}"></b>
+            <span th:text="${msg.text}"></span>
+            <i th:text="${msg.tag}"></i>
+        </div>
+    </div>
+</body>
+</html>
