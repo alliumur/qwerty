@@ -14,7 +14,8 @@ import pl.rmv.qwerty.repository.MessageRepository;
 @Controller
 public class MainController {
     @Autowired
-    MessageRepository messageRepository;
+    private MessageRepository messageRepository;
+
     @GetMapping("/")
     public String welcome(
             @RequestParam(name = "name", required = false, defaultValue = "Qwerty") String name, Model model){

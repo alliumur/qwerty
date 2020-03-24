@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:insert="~{fragments/header :: this}"/>
+<body>
+    <div>Lista użytkowników</div>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}" />
+                <td th:text="${#strings.listJoin(user.roles, ', ')}">
+                <td><a th:href="${'/user/'+user.id}">edytuj</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

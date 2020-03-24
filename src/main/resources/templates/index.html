@@ -6,13 +6,14 @@
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Wyloguj"/>
     </form>
-    <di>
+    <span><a href="/user">Użytkownicy</a></span>
+    <div>
         <form method="post" th:action="@{/createmessage}">
             <input name="text" placeholder="Wpisz treść wiadomości"/>
             <input name="tag"  placeholder="Tagi"/>
             <button type="submit">Dodaj</button>
         </form>
-    </di>
+    </div>
     <div>
         <form method="get" th:action="@{/index}">
             <input name="filter" placeholder="Wpisz tag" th:value="${filter}"/>

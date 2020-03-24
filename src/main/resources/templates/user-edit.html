@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:insert="~{fragments/header :: this}"/>
+<body>
+    <div>Edytuj</div>
+    <form th:action="@{/user}" method="post">
+        <input type="hidden" name="id" th:value="${user.id}"/>
+        <input type="text"   name="username" th:value="${user.username}"/>
+        <span th:each="role : ${roles}">
+            <label th:text="${role}"/><input type="checkbox" th:name="${role}" th:checked="${user.roles.contains(role)}"/>
+        </span>
+        <button type="submit">Zatwierdź</button>
+    </form>
+</body>
+</html>
