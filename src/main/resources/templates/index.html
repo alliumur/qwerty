@@ -8,9 +8,10 @@
     </form>
     <span><a href="/user">Użytkownicy</a></span>
     <div>
-        <form method="post" th:action="@{/createmessage}">
+        <form method="post" th:action="@{/createmessage}" enctype="multipart/form-data">
             <input name="text" placeholder="Wpisz treść wiadomości"/>
             <input name="tag"  placeholder="Tagi"/>
+            <input type="file" name="file"/>
             <button type="submit">Dodaj</button>
         </form>
     </div>
@@ -27,6 +28,9 @@
             <span th:text="${msg.text}"></span>
             <i th:text="${msg.tag}"></i>
             <b th:text="${msg.authorName}"></b>
+            <div th:if="${msg.filename}">
+                <img alt="image" th:src="${'/img/'+msg.filename}" />
+            </div>
         </div>
     </div>
 </body>

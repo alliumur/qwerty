@@ -14,12 +14,15 @@ public class Message {
     @JoinColumn(name = "user_id") // ponieważ domyślnie była by nazwa z pola - 'author_id'
     private User author;
 
+    private String filename;
+
     public Message() { }
 
-    public Message(String text, String tag, User author) {
+    public Message(String text, String tag, User author, String filename) {
         this.text = text;
         this.tag = tag;
         this.author = author;
+        this.filename = filename;
     }
 
     public String getAuthorName(){
@@ -53,4 +56,12 @@ public class Message {
     public User getAuthor() { return author; }
 
     public void setAuthor(User author) { this.author = author; }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 }
