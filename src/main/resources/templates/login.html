@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:insert="~{fragments/header :: this}"/>
-<body>
+<head th:replace="~{index :: head}"/>
+
+<th:block th:if="${false}" th:fragment="content">
     <div th:if="${param.error}">
         Invalid username and password.
     </div>
@@ -10,5 +11,7 @@
     </div>
     <div th:insert="~{fragments/form :: auth('/login', 'Zaloguj')}"></div>
     <a href="/registration">Utwórz użytkownika</a>
-</body>
+</th:block>
+
+<body th:include="~{index :: body('login')}" />
 </html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index :: head}"/>
+
+<th:block th:if="${false}" th:fragment="content">
+    <h1 th:inline="text">Witaj [[${#httpServletRequest.remoteUser}]]!</h1>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Wyloguj"/>
+    </form>
+    <span><a href="/user">Użytkownicy</a></span>
+    <div>
+        <form method="post" th:action="@{/createmessage}" enctype="multipart/form-data">
+            <input name="text" placeholder="Wpisz treść wiadomości"/>
+            <input name="tag"  placeholder="Tagi"/>
+            <input type="file" name="file"/>
+            <button type="submit">Dodaj</button>
+        </form>
+    </div>
+    <div>
+        <form method="get" th:action="@{/index}">
+            <input name="filter" placeholder="Wpisz tag" th:value="${filter}"/>
+            <button type="submit">Filtruj</button>
+        </form>
+    </div>
+    <div>Lista powiadomień</div>
+    <div th:each="msg: ${messages}">
+        <div>
+            <b th:text="${msg.id}"></b>
+            <span th:text="${msg.text}"></span>
+            <i th:text="${msg.tag}"></i>
+            <b th:text="${msg.authorName}"></b>
+            <div th:if="${msg.filename}">
+                <img alt="image" th:src="${'/img/'+msg.filename}" />
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<body th:include="~{index :: body('home')}" />
+</html>

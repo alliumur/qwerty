@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:insert="~{fragments/header :: this}"/>
-<body>
+<head th:replace="~{index :: head}"/>
+
+<th:block th:if="${false}" th:fragment="content">
     <div>Dodanie nowego użytkownika</div>
     <div th:insert="~{fragments/form :: auth('/registration', 'Dodaj')}"></div>
-</body>
+</th:block>
+
+<body th:include="~{index :: body('registration')}" />
 </html>

@@ -32,7 +32,7 @@ public class MainController {
         return "welcome";
     }
 
-    @GetMapping("/index")
+    @GetMapping("/home")
     public String index(@RequestParam(required = false) String filter, Model model){
         Iterable<Message> messages;
         if(filter != null && !filter.isEmpty()){
@@ -43,7 +43,7 @@ public class MainController {
         model.addAttribute("messages", messages);
         model.addAttribute("filter", filter);
 
-        return "index";
+        return "home";
     }
 
     @PostMapping("/createmessage")
@@ -72,6 +72,6 @@ public class MainController {
         }
         Iterable<Message> messages = messageRepository.findAll();
         model.addAttribute("messages", messages);
-        return "index";
+        return "home";
     }
 }
