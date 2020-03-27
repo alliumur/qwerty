@@ -15,7 +15,8 @@
     <title>qwerty</title>
 </head>
 <body th:fragment="body(filename)">
-    <div class="container">
+    <div th:include="fragments/navbar::this" />
+    <div class="container mt-5">
         <!--/*@thymesVar id="filename" type=""*/-->
         <th:block th:include="${filename}::content"/>
     </div>

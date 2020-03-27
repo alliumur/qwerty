@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="this">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">qwerty</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Startowa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Wiadomości</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user">Użytkownicy</a>
+                </li>
+            </ul>
+            <th:block th:if="${#httpServletRequest.remoteUser != null}">
+                <div class="navbar-text" th:text="${#httpServletRequest.remoteUser}"/>
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-success ml-3" type="submit">Wyloguj</button>
+                </form>
+            </th:block>
+        </div>
+    </nav>
+</th:block>
+</html>

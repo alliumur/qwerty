@@ -3,7 +3,7 @@
 <head th:replace="~{index :: head}"/>
 
 <th:block th:if="${false}" th:fragment="content">
-    <div>Dodanie nowego użytkownika</div>
+    <h5 class="mb-3">Rejestracja</h5>
     <div th:insert="~{fragments/form :: auth('/registration', 'Dodaj')}"></div>
 </th:block>
 

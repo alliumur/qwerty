@@ -3,36 +3,62 @@
 <head th:replace="~{index :: head}"/>
 
 <th:block th:if="${false}" th:fragment="content">
-    <h1 th:inline="text">Witaj [[${#httpServletRequest.remoteUser}]]!</h1>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Wyloguj"/>
-    </form>
-    <span><a href="/user">Użytkownicy</a></span>
-    <div>
-        <form method="post" th:action="@{/createmessage}" enctype="multipart/form-data">
-            <input name="text" placeholder="Wpisz treść wiadomości"/>
-            <input name="tag"  placeholder="Tagi"/>
-            <input type="file" name="file"/>
-            <button type="submit">Dodaj</button>
-        </form>
-    </div>
-    <div>
-        <form method="get" th:action="@{/index}">
-            <input name="filter" placeholder="Wpisz tag" th:value="${filter}"/>
-            <button type="submit">Filtruj</button>
-        </form>
-    </div>
-    <div>Lista powiadomień</div>
-    <div th:each="msg: ${messages}">
-        <div>
-            <b th:text="${msg.id}"></b>
-            <span th:text="${msg.text}"></span>
-            <i th:text="${msg.tag}"></i>
-            <b th:text="${msg.authorName}"></b>
-            <div th:if="${msg.filename}">
-                <img alt="image" th:src="${'/img/'+msg.filename}" />
-            </div>
+    <div class="form-row">
+        <div class="form-group ml-1">
+            <form class="form-inline" method="get" th:action="@{/home}">
+                <div class="form-group mr-2">
+                    <input  class="form-control" name="filter" placeholder="tag" th:value="${filter}"/>
+                </div>
+                <div class="form-group mr-4">
+                    <button class="btn btn-primary" type="submit">Wyszukaj</button>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Utwórz wiadomość
+                    </a>
+                </div>
+            </form>
         </div>
+    </div>
+
+    <div class="collapse" id="collapseExample">
+        <div class="form-group">
+            <form class="form-inline" method="post" th:action="@{/createmessage}" enctype="multipart/form-data">
+                <div class="form-group mr-2">
+                    <input class="form-control" name="text" placeholder="Wpisz treść wiadomości"/>
+                </div>
+                <div class="form-group mr-2">
+                    <input class="form-control" name="tag"  placeholder="Tagi"/>
+                </div>
+                <div class="form-group mr-4">
+                    <div class="custom-file">
+                        <input type="file" name="file" id="customFile"/>
+                        <label class="custom-file-label" for="customFile">Dołącz obrazek</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">Dodaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card-columns">
+        <th:block th:each="msg: ${messages}">
+            <div class="card my-3">
+                <th:block th:if="${msg.filename}">
+                    <img class="card-img-top" alt="image" th:src="${'/img/'+msg.filename}" />
+                </th:block>
+                <div class="m-2">
+                    <span th:text="${msg.text}"></span>
+                    <i th:text="${msg.tag}"></i>
+                </div>
+
+                <div class="card-footer text-muted">
+                    <th:block th:text="${msg.authorName}" />
+                </div>
+            </div>
+        </th:block>
     </div>
 </th:block>
 

@@ -33,7 +33,7 @@ public class MainController {
     }
 
     @GetMapping("/home")
-    public String index(@RequestParam(required = false) String filter, Model model){
+    public String home(@RequestParam(required = false) String filter, Model model){
         Iterable<Message> messages;
         if(filter != null && !filter.isEmpty()){
             messages = messageRepository.findByTag(filter);

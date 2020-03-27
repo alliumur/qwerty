@@ -9,8 +9,10 @@
     <div th:if="${param.logout}">
         You have been logged out.
     </div>
-    <div th:insert="~{fragments/form :: auth('/login', 'Zaloguj')}"></div>
-    <a href="/registration">Utwórz użytkownika</a>
+    <div>
+        <th:block th:insert="~{fragments/form :: auth('/login', 'Zaloguj')}" />
+        <a href="/registration"> Dodaj użytkownika</a>
+    </div>
 </th:block>
 
 <body th:include="~{index :: body('login')}" />
