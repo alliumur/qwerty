@@ -20,6 +20,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- email -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!-- bootstrap and jquery -->
 		<dependency>
 			<groupId>org.webjars</groupId>
