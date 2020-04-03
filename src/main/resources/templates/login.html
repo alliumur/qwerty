@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{index :: head}"/>
 
 <th:block th:if="${false}" th:fragment="content">
-    <div th:if="${param.error}" th:text="Użytkownik lub hasło jest niepoprawne" />
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
     <div>
         <th:block th:insert="~{fragments/form :: auth('/login', 'Zaloguj')}" />
         <a href="/registration"> Dodaj użytkownika</a>

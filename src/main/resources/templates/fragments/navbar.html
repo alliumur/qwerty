@@ -15,8 +15,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/home">Wiadomości</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" th:if="${#session?.getAttribute('isAdmin')}">
                     <a class="nav-link" href="/user">Użytkownicy</a>
+                </li>
+                <li class="nav-item" th:if="${#session?.getAttribute('isLogged')}">
+                    <a class="nav-link" href="/user/profile">Profile</a>
                 </li>
             </ul>
             <th:block th:if="${#httpServletRequest.remoteUser != null}">

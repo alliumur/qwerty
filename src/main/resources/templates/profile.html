@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index :: head}"/>
+
+<th:block th:if="${false}" th:fragment="content">
+    <h5 class="mb-3">Profil użytkownika</h5>
+    <div th:insert="~{fragments/form :: auth('/user/profile', 'Zmień')}"></div>
+</th:block>
+
+<body th:include="~{index :: body('profile')}" />
+</html>

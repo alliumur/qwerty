@@ -5,7 +5,7 @@ insert into hibernate_sequence values (1);
 insert into hibernate_sequence values (1);
 
 create table message (
-    id bigint not null,
+    id bigint not null AUTO_INCREMENT,
     filename varchar(255),
     tag varchar(255),
     text varchar(255),
@@ -13,7 +13,7 @@ create table message (
     primary key (id)
 ) engine=InnoDB;
 create table user (
-    id bigint not null,
+    id bigint not null AUTO_INCREMENT,
     activation_code varchar(255),
     active bit not null,
     email varchar(255),

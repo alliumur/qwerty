@@ -2,30 +2,30 @@ package pl.rmv.qwerty.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.rmv.qwerty.model.Role;
 import pl.rmv.qwerty.model.User;
 import pl.rmv.qwerty.repository.UserRepository;
+import pl.rmv.qwerty.service.UserService;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String users(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.getUsers());
         return "users";
     }
 
@@ -37,6 +37,7 @@ public class UserController {
      * spring na podstawie id oraz repozytorium może pobrać obiekt
      */
     @GetMapping("{user}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String edit(@PathVariable User user, Model model) {
         model.addAttribute("cuser", user);
         model.addAttribute("roles", Role.values());
@@ -44,24 +45,33 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String edit(
             @RequestParam("id") User user,
             @RequestParam("username") String username,
             @RequestParam Map<String, String> formparam) {
 
-        user.setUsername(username);
-
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
-        user.getRoles().clear();
-        for (String param : formparam.keySet()) {
-            if(roles.contains(param)){
-                user.getRoles().add(Role.valueOf(param));
-            }
-        }
-
-        userRepository.save(user);
+        userService.edit(user.getId(), username, null, null, null, new ArrayList<>(formparam.keySet()));
         return "redirect:/user";
+    }
+
+    @GetMapping("profile")
+    public String profile(@AuthenticationPrincipal User user, Model model){
+        model.addAttribute("id", user.getId());
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        return "profile";
+    }
+    //Long id, String username, String password, String oldPassword, String email, List<String> userRoles){
+    @PostMapping("profile")
+    public String profile(@ModelAttribute("userForm") User user, @RequestParam("oldPassword") String oldPassword, Model model){
+        if(userService.edit(user.getId(), user.getUsername(), user.getPassword(), oldPassword, user.getEmail(), null)){
+            SecurityContextHolder.clearContext();
+            return "redirect:/login";
+        }else{
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("email", user.getEmail());
+            return  "user/profile";
+        }
     }
 }

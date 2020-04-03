@@ -10,8 +10,8 @@ import pl.rmv.qwerty.model.Role;
 import pl.rmv.qwerty.model.User;
 import pl.rmv.qwerty.repository.UserRepository;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -62,4 +62,57 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         return true;
     }
+    
+    public boolean edit(Long id, String username, String password, String oldPassword, String email, List<String> userRoles){
+        User user = userRepository.findById(id).get();
+        if(user == null) return false;
+        boolean edit = false;
+
+        if(!StringUtils.isEmpty(username) && !user.getUsername().equals(username)){
+            user.setUsername(username);
+            edit = true;
+        }
+
+        if(!StringUtils.isEmpty(password)
+                && !StringUtils.isEmpty(oldPassword)
+                && user.getPassword().equals(oldPassword)
+                && !password.equals(oldPassword)){
+            user.setPassword(password);
+            edit = true;
+        }
+
+        if(!StringUtils.isEmpty(email) && !user.getEmail().equals(email)){
+            user.setActive(false);
+            user.setActivationCode(UUID.randomUUID().toString());
+            String message = String.format(
+                    "Zmiania danych w serwisie qwerty. \n" +
+                            "Email zostal zmieniony na aktualny. Żeby ponownie aktywować aplikację przejdź http://localhost:8080/activate/%s",
+                    user.getUsername(),
+                    user.getActivationCode()
+            );
+            mailsender.send(user.getEmail(), "Activation code", message);
+            edit = true;
+        }
+
+        if(userRoles != null){
+            Set<String> roles = Arrays.stream(Role.values())
+                    .map(Role::name)
+                    .collect(Collectors.toSet());
+            user.getRoles().clear();
+            for (String param : userRoles) {
+                if(roles.contains(param)){
+                    user.getRoles().add(Role.valueOf(param));
+                }
+            }
+            edit = true;
+        }
+        if(edit) userRepository.save(user);
+        return true;
+    }
+
+    public Iterable<User> getUsers(){
+        return userRepository.findAll();
+    }
+
+    public User getUser(Long id){ return userRepository.findById(id).get(); }
 }

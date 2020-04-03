@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pl.rmv.qwerty.model.Message;
+import pl.rmv.qwerty.model.Role;
 import pl.rmv.qwerty.model.User;
 import pl.rmv.qwerty.repository.MessageRepository;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -33,7 +35,10 @@ public class MainController {
     }
 
     @GetMapping("/home")
-    public String home(@RequestParam(required = false) String filter, Model model){
+    public String home(@AuthenticationPrincipal User user, HttpSession session, @RequestParam(required = false) String filter, Model model){
+        session.setAttribute("isLogged", true);
+        session.setAttribute("isAdmin", user.getRoles().contains(Role.ADMIN));
+
         Iterable<Message> messages;
         if(filter != null && !filter.isEmpty()){
             messages = messageRepository.findByTag(filter);
