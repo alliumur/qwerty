@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import pl.rmv.qwerty.model.Role;
@@ -25,6 +26,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private MailSender mailsender;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username);
@@ -34,21 +38,29 @@ public class UserService implements UserDetailsService {
         if(userRepository.findByUsername(user.getUsername()) != null){
             return false;
         }
-        user.setActive(false);
-        user.setRoles(Collections.singleton(Role.USER));
-        user.setActivationCode(UUID.randomUUID().toString());
-        userRepository.save(user);
 
-        if(!StringUtils.isEmpty(user.getEmail())){
-            String message = String.format(
-                    "Witaj %s!, \n" +
-                    "Miło nam że jesteś z nami. Żeby dokończyć rejestrację, przejdź: http://localhost:8080/activate/%s",
-                    user.getUsername(),
-                    user.getActivationCode()
-            );
+        if(user.getUsername().equals("admin")){
+            user.setActive(true);
+            user.setRoles(Collections.singleton(Role.ADMIN));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }else {
+            user.setActive(false);
+            user.setRoles(Collections.singleton(Role.USER));
+            user.setActivationCode(UUID.randomUUID().toString());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-            mailsender.send(user.getEmail(), "Activation code", message);
+            if(!StringUtils.isEmpty(user.getEmail())){
+                String message = String.format(
+                        "Witaj %s!, \n" +
+                                "Miło nam że jesteś z nami. Żeby dokończyć rejestrację, przejdź: http://localhost:8080/activate/%s",
+                        user.getUsername(),
+                        user.getActivationCode()
+                );
+
+                mailsender.send(user.getEmail(), "Activation code", message);
+            }
         }
+        userRepository.save(user);
         return true;
     }
 

@@ -28,3 +28,5 @@ create table user_role (
 
 alter table message add constraint message_user_fk foreign key (user_id) references user (id);
 alter table user_role add constraint user_role_user_fk foreign key (user_id) references user (id);
+
+set sql_mode='NO_AUTO_VALUE_ON_ZERO';
