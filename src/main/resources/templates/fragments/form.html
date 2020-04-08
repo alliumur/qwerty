@@ -59,6 +59,9 @@
                     <div th:if="${passwordConfirmError}" class="invalid-feedback" th:text="${passwordConfirmError}"></div>
                 </div>
             </div>
+            <div th:if="${actionName == '/registration'}">
+                <div class="g-recaptcha" data-sitekey="6Lcl-ecUAAAAACUFy01i4bd3N1jPEasnH36bP0-b"></div>
+            </div>
             <button class="btn btn-primary" type="submit" th:text="${btnSubmitName}"/>
         </form>
     </th:block>
