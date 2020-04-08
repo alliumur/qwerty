@@ -1,13 +1,22 @@
 package pl.rmv.qwerty.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank(message = "Pole nie może być puste")
+    @Length(max = 2048, message = "Wiadomość musi być krótrza")
     private String text;
+
+    @NotBlank(message = "Pole nie może być puste")
+    @Length(max = 16, message = "Tag musi być krótrzy")
     private String tag;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service /* za pomocą tej adnotacji spring utworzy obiekt automatycznie */
-public class MailSender {
+public class MailService {
     @Autowired
     private JavaMailSender mailSender;
 

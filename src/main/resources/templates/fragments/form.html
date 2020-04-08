@@ -1,17 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <th:block th:fragment="auth(actionName, btnSubmitName)">
-        <!--/*@thymesVar id="actionName" type=""*/-->
-        <!--/*@thymesVar id="userForm" type=""*/-->
-        <!--/*@thymesVar id="message" type=""*/-->
-        <!--/*@thymesVar id="error" type=""*/-->
-        <!--/*@thymesVar id="warning" type=""*/-->
-        <!--/*@thymesVar id="username" type=""*/-->
-        <!--/*@thymesVar id="email" type=""*/-->
-        <!--/*@thymesVar id="btnSubmitName" type=""*/-->
-        <!--/*@thymesVar id="id" type=""*/-->
-
-        <form th:action="${actionName}" th:object="${userForm}" method="post">
+        <form th:action="${actionName}" method="post">
             <input type="hidden" name="id" th:value="${id}"/>
             <div class="form-group row">
                 <div class="col-sm-5">
@@ -32,12 +22,24 @@
             </div>
             <div class="form-group row" >
                 <div class="col-sm-5">
-                    <input class="form-control" type="text" th:name="username"  name="username" th:value="${username != null} ? ${username} : ''" placeholder="Użytkownik"/>
+                    <input th:class="'form-control ' + ${usernameError != null ? 'is-invalid' : ''}"
+                           type="text"
+                           th:name="username"
+                           name="username"
+                           th:value="${user?.username}"
+                           placeholder="Użytkownik"/>
+                    <div th:if="${usernameError}" class="invalid-feedback" th:text="${usernameError}"></div>
                 </div>
             </div>
             <div class="form-group row" th:if="${actionName == '/registration' || actionName == '/user/profile'}">
                 <div class="col-sm-5">
-                    <input class="form-control" type="email" th:name="email" name="email" th:value="${email != null} ? ${email} : ''" placeholder="Email"/>
+                    <input th:class="'form-control ' + ${emailError != null ? 'is-invalid' : ''}"
+                           type="email"
+                           th:name="email"
+                           name="email"
+                           th:value="${user?.email}"
+                           placeholder="Email"/>
+                    <div th:if="${emailError}" class="invalid-feedback" th:text="${emailError}"></div>
                 </div>
             </div>
             <div class="form-group row" th:if="${actionName == '/user/profile'}">
@@ -47,7 +49,24 @@
             </div>
             <div class="form-group row">
                 <div class="col-sm-5">
-                    <input class="form-control" type="password" th:name="password" name="password"  th:placeholder="${actionName == '/user/profile'  ? 'Nowe hasło' : 'Hasło'}"/>
+                    <input th:class="'form-control ' + ${passwordError != null ? 'is-invalid' : ''}"
+                           type="password"
+                           th:name="password"
+                           name="password"
+                           th:value="${user?.password}"
+                           th:placeholder="${actionName == '/user/profile'  ? 'Nowe hasło' : 'Hasło'}"/>
+                    <div th:if="${passwordError}" class="invalid-feedback" th:text="${passwordError}"></div>
+                </div>
+            </div>
+            <div class="form-group row" th:if="${actionName == '/registration' || actionName == '/user/profile'}">
+                <div class="col-sm-5">
+                    <input th:class="'form-control ' + ${passwordConfirmError != null ? 'is-invalid' : ''}"
+                           type="password"
+                           th:name="passwordConfirm"
+                           name="passwordConfirm"
+                           th:value="${user?.passwordConfirm}"
+                           placeholder="Powtórz hasło"/>
+                    <div th:if="${passwordConfirmError}" class="invalid-feedback" th:text="${passwordConfirmError}"></div>
                 </div>
             </div>
             <button class="btn btn-primary" type="submit" th:text="${btnSubmitName}"/>

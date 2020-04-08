@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Autowired
-    private MailSender mailsender;
+    private MailService mailsender;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -34,11 +34,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
-    public boolean add(User user){
-        if(userRepository.findByUsername(user.getUsername()) != null){
-            return false;
-        }
+    public boolean exist(String username){
+        return userRepository.findByUsername(username) != null;
+    }
 
+    public void add(User user){
         if(user.getUsername().equals("admin")){
             user.setActive(true);
             user.setRoles(Collections.singleton(Role.ADMIN));
@@ -61,7 +61,6 @@ public class UserService implements UserDetailsService {
             }
         }
         userRepository.save(user);
-        return true;
     }
 
     public boolean activate(String code) {
@@ -71,6 +70,7 @@ public class UserService implements UserDetailsService {
         }
         user.setActive(true);
         user.setActivationCode(null);
+        user.setPasswordConfirm(user.getPassword());
         userRepository.save(user);
         return true;
     }

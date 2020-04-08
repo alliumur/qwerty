@@ -21,20 +21,31 @@
         </div>
     </div>
 
-    <div class="collapse" id="collapseExample">
+    <div th:class="'collapse ' + ${textError != null ? 'show' : ''}" id="collapseExample">
+        <!--/*@thymesVar id="textError" type=""*/-->
+        <!--/*@thymesVar id="tagError" type=""*/-->
         <div class="form-group">
-            <form class="form-inline" method="post" th:action="@{/createmessage}" enctype="multipart/form-data">
-                <div class="form-group mr-2">
-                    <input class="form-control" name="text" placeholder="Wpisz treść wiadomości"/>
+            <form method="post" th:action="@{/createmessage}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input th:class="'form-control ' + ${textError != null ? 'is-invalid' : ''}"
+                           th:value="${message?.text}"
+                           name="text"
+                           placeholder="Wpisz treść wiadomości"/>
+                    <div th:if="${textError}" class="invalid-feedback" th:text="${textError}"></div>
                 </div>
-                <div class="form-group mr-2">
-                    <input class="form-control" name="tag"  placeholder="Tagi"/>
+                <div class="form-group">
+                    <input th:class="'form-control ' + ${tagError != null ? 'is-invalid' : ''}"
+                           th:value="${message?.tag}"
+                           name="tag"
+                           placeholder="Tagi"/>
+                    <div th:if="${tagError}" class="invalid-feedback" th:text="${tagError}"></div>
                 </div>
-                <div class="form-group mr-4">
+                <div class="form-group">
                     <div class="custom-file">
                         <input type="file" name="file" id="customFile"/>
                         <label class="custom-file-label" for="customFile">Dołącz obrazek</label>
                     </div>
+
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit">Dodaj</button>
