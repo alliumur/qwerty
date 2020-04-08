@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{index :: head}"/>
 
 <th:block th:if="${false}" th:fragment="content">
-    <div th:if="${param.error}">
-        Invalid username and password.
-    </div>
-    <div th:if="${param.logout}">
-        You have been logged out.
-    </div>
+    <th:block th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+        <div class="form-group row">
+            <div class="col-sm-5">
+                <div class="alert alert-danger" role="alert">
+                    <span th:text="${errorMsg}"></span>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
     <div>
         <th:block th:insert="~{fragments/form :: auth('/login', 'Zaloguj')}" />
         <a href="/registration"> Dodaj użytkownika</a>

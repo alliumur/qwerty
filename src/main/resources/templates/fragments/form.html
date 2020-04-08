@@ -3,20 +3,10 @@
     <th:block th:fragment="auth(actionName, btnSubmitName)">
         <form th:action="${actionName}" method="post">
             <input type="hidden" name="id" th:value="${id}"/>
-            <div class="form-group row">
+            <div class="form-group row" th:if="${message != null}">
                 <div class="col-sm-5">
-                    <div class="alert alert-success" role="alert" th:if="${message != null}">
+                    <div th:class="'alert alert-' +${messageType}" role="alert">
                         <span th:text="${message}"></span>
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="alert alert-danger" role="alert" th:if="${error != null}">
-                        <span th:text="${error}"></span>
-                    </div>
-                </div>
-                <div class="col-sm-5">
-                    <div class="alert alert-warning" role="alert" th:if="${warning != null}">
-                        <span th:text="${warning}"></span>
                     </div>
                 </div>
             </div>

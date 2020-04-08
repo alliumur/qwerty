@@ -45,7 +45,8 @@ public class RegistrationController {
         }
 
         userService.add(user);
-        redirectAttributes.addFlashAttribute("warning","Na podany email został wysłany list z linkiem aktywacyjnym");
+        redirectAttributes.addFlashAttribute("messageType", "warning");
+        redirectAttributes.addFlashAttribute("message","Na podany email został wysłany list z linkiem aktywacyjnym");
         model.addAttribute("user", user);
         return "redirect:/login";
     }
@@ -54,9 +55,11 @@ public class RegistrationController {
     public String activate(Model model, @PathVariable String code){
         boolean isActivate = userService.activate(code);
         if(isActivate){
+            model.addAttribute("messageType", "success");
             model.addAttribute("message", "Aktywacja przebiegła pomyślnie");
         }else {
-            model.addAttribute("error", "Niewłaściwy kod aktywacyjny");
+            model.addAttribute("messageType", "danger");
+            model.addAttribute("message", "Niewłaściwy kod aktywacyjny");
         }
         return "login";
     }
