@@ -35,8 +35,12 @@ public class RegistrationController {
     @Value("${recaptcha.secret}")
     private String secret;
 
+    @Value("${captcha}")
+    private Boolean captcha;
+
     @GetMapping("/registration")
-    private String registration(){
+    private String registration(Model model){
+        model.addAttribute("captcha", captcha);
         return "registration";
     }
 
@@ -45,7 +49,7 @@ public class RegistrationController {
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
         CaptchaResponseDto response = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
 
-        if(!response.isSuccess()){
+        if(captcha && !response.isSuccess()){
             model.addAttribute("messageType", "danger");
             model.addAttribute("message", "Captcha nie uzupełniona");
         }else if(userService.exist(user.getUsername())){
@@ -58,6 +62,7 @@ public class RegistrationController {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("user", user);
+            model.addAttribute("captcha", captcha);
             return "registration";
         }
 
