@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,7 @@ import pl.rmv.qwerty.model.Role;
 import pl.rmv.qwerty.model.User;
 import pl.rmv.qwerty.repository.MessageRepository;
 import pl.rmv.qwerty.service.UploadService;
+import pl.rmv.qwerty.service.UserService;
 import pl.rmv.qwerty.utils.ControllerUtils;
 
 import javax.servlet.http.HttpSession;
@@ -34,6 +37,9 @@ public class MainController {
 
     @Autowired
     private UploadService uploadService;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -62,13 +68,15 @@ public class MainController {
         return "home";
     }
 
-    @PostMapping("/createmessage")
+    @PostMapping("/user-messages/{username}/createmessage")
     public String createmessage(
+            @PathVariable String username,
             @AuthenticationPrincipal User user,
             @Valid Message message,
             BindingResult bindingResult, // zawsze musi być przed 'model', żeby błędy nie były przechwytywane przez widok
             Model model,
-            @RequestParam("file") MultipartFile file) throws IOException {
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
         if(bindingResult.hasErrors()){
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
@@ -82,6 +90,45 @@ public class MainController {
         }
         Iterable<Message> messages = messageRepository.findAll();
         model.addAttribute("messages", messages);
-        return "home";
+        return "redirect:/user-messages/"+username;
+    }
+
+    @GetMapping("/user-messages/{username}")
+    public String messages(
+            @PathVariable String username,
+            @AuthenticationPrincipal User currentUser,
+            Model model,
+            @RequestParam(required = false) Message message
+    ){
+        User user = userService.getUser(username);
+        model.addAttribute("editable", currentUser.equals(user));
+        model.addAttribute("message",  message);
+        model.addAttribute("messages",  user.getMessages());
+        return "user-messages";
+    }
+
+    @PostMapping("/user-messages/{username}")
+    public String updateMessages(
+            @PathVariable String username,
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam("id") Message message,
+            @RequestParam("text") String text,
+            @RequestParam("tag") String tag,
+            @RequestParam("file") MultipartFile file
+
+    ){
+        if(message.getAuthor().equals(currentUser)){
+            if(!StringUtils.isEmpty(text)){
+                message.setText(text);
+            }
+            if(!StringUtils.isEmpty(tag)){
+                message.setTag(tag);
+            }
+
+            uploadService.transfer(file);
+            message.setFilename(uploadService.getFileName());
+            messageRepository.save(message);
+        }
+        return "redirect:/user-messages/"+username;
     }
 }

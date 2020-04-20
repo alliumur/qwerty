@@ -3,9 +3,9 @@
 <head th:replace="~{index :: head}"/>
 
 <th:block th:if="${false}" th:fragment="content">
-    <th:block th:insert="~{fragments/message :: args(false)}" />
+    <th:block th:insert="~{fragments/message :: args(true)}" />
     <th:block th:insert="~{fragments/message-list :: list(${messages})}" />
 </th:block>
 
-<body th:include="~{index :: body('home')}" />
+<body th:include="~{index :: body('user-messages')}" />
 </html>

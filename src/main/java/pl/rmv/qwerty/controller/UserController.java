@@ -9,12 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.rmv.qwerty.model.Role;
 import pl.rmv.qwerty.model.User;
-import pl.rmv.qwerty.repository.UserRepository;
 import pl.rmv.qwerty.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -62,7 +59,6 @@ public class UserController {
         model.addAttribute("email", user.getEmail());
         return "profile";
     }
-    //Long id, String username, String password, String oldPassword, String email, List<String> userRoles){
     @PostMapping("profile")
     public String profile(@ModelAttribute("userForm") User user, @RequestParam("oldPassword") String oldPassword, Model model){
         if(userService.edit(user.getId(), user.getUsername(), user.getPassword(), oldPassword, user.getEmail(), null)){

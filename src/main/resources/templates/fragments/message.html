@@ -1,0 +1,68 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="args(btnVisible)">
+    <div class="form-row">
+        <div class="form-group ml-1">
+            <form class="form-inline" method="get" th:action="@{/home}">
+                <div class="form-group mr-2">
+                    <input  class="form-control" name="filter" placeholder="tag" th:value="${filter}"/>
+                </div>
+                <div class="form-group mr-4">
+                    <button class="btn btn-primary" type="submit">Wyszukaj</button>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-primary"
+                       data-toggle="collapse"
+                       href="#collapseExample"
+                       role="button"
+                       aria-expanded="false"
+                       aria-controls="collapseExample"
+                       th:text="${message != null} ? 'Edytor wiadomości' : 'Dodaj wiadomość'"
+                       th:style="'display:' + ${btnVisible == false ||  message != null ? 'none' : 'block'}"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:class="'collapse ' + ${textError != null || message != null ? 'show' : ''}" id="collapseExample">
+        <!--/*@thymesVar id="textError" type=""*/-->
+        <!--/*@thymesVar id="tagError" type=""*/-->
+        <div class="form-group">
+            <form method="post" th:action="'/user-messages/' + ${#httpServletRequest.remoteUser} + '/createmessage'" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${message?.id}"/>
+                <div class="form-group">
+                    <input th:class="'form-control ' + ${textError != null ? 'is-invalid' : ''}"
+                           th:value="${message?.text}"
+                           name="text"
+                           placeholder="Wpisz treść wiadomości"/>
+                    <div th:if="${textError}" class="invalid-feedback" th:text="${textError}"></div>
+                </div>
+                <div class="form-group">
+                    <input th:class="'form-control ' + ${tagError != null ? 'is-invalid' : ''}"
+                           th:value="${message?.tag}"
+                           name="tag"
+                           placeholder="Tagi"/>
+                    <div th:if="${tagError}" class="invalid-feedback" th:text="${tagError}"></div>
+                </div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" name="file" id="customFile"/>
+                        <label class="custom-file-label" for="customFile" th:text="(${message != null} ? 'Zmień' : 'Dodaj') + ' obrazek'" />
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <th:block th:if="${message != null}">
+                        <button class="btn btn-primary" type="submit" th:formaction="'/user-messages/'+${#httpServletRequest.remoteUser}" th:text="'Zmień'" />
+                        <a class="btn btn-secondary" th:href="'/user-messages/'+${#httpServletRequest.remoteUser}" th:text="'Anuluj'"/>
+                    </th:block>
+                    <th:block th:if="${message == null}">
+                        <button class="btn btn-primary" type="submit" th:text="'Dodaj'" />
+                    </th:block>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
