@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{index :: head}"/>
+
+<th:block th:if="${false}" th:fragment="content">
+    <h3 th:text="${username} + ' - ' + ${type=='subscriptions' ? 'moje subskrypcje' : 'moje subskrybenty'} "/>
+    <ul class="list-group">
+        <th:block th:each="user: ${users}">
+            <li class="list-group-item">
+                <a th:href="'/user-messages/'+ ${user.getUsername()}" th:text="${user.getUsername()}"/>
+            </li>
+        </th:block>
+    </ul>
+</th:block>
+
+<body th:include="~{index :: body('subscriptions')}" />
+</html>

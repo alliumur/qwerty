@@ -70,4 +70,30 @@ public class UserController {
             return  "user/profile";
         }
     }
+
+    @GetMapping("subscribe/{username}")
+    public String subscribe(@AuthenticationPrincipal User currentUser, @PathVariable String username){
+        userService.subscribe(currentUser, userService.getUser(username));
+        return "redirect:/user-messages/" + username;
+    }
+
+    @GetMapping("unsubscribe/{username}")
+    public String unsubscribe(@AuthenticationPrincipal User currentUser, @PathVariable String username){
+        userService.unsubscribe(currentUser, userService.getUser(username));
+        return "redirect:/user-messages/" + username;
+    }
+
+    @GetMapping("{type}/{username}/list")
+    public String subscriptions(Model model, @PathVariable String username, @PathVariable String type){
+        User user = userService.getUser(username);
+
+        model.addAttribute("username", username);
+        model.addAttribute("type", type);
+        if("subscriptions".equals(type)){
+            model.addAttribute("users", user.getSubscriptions());
+        }else{
+            model.addAttribute("users", user.getSubscribers());
+        }
+        return "subscriptions";
+    }
 }

@@ -3,6 +3,35 @@
 <head th:replace="~{index :: head}"/>
 
 <th:block th:if="${false}" th:fragment="content">
+    <h3 th:text="${username}"/>
+    <th:block th:if="${!editable}">
+        <a th:unless="${isSubscribe}" class="btn btn-info my-3" th:href="'/user/subscribe/'+${username}" th:text="'Subskrybuj'"/>
+        <a th:if="${isSubscribe}" class="btn badge-light my-3" th:href="'/user/unsubscribe/'+${username}" th:text="'Zrezygnuj z subskrybcji'"/>
+    </th:block>
+    <div th:if="${editable}" class="container my-3">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">Moje subskrybcje</div>
+                        <h3 class="card-text">
+                            <a th:href="'/user/subscriptions/'+${#httpServletRequest.remoteUser}+'/list'" th:text="${subscriptionsCount}"/>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col" style="padding: 0">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-title">Moje subskrybenty</div>
+                        <h3 class="card-text">
+                            <a th:href="'/user/subscribers/'+${#httpServletRequest.remoteUser} +'/list'" th:text="${subscribersCount}"/>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <th:block th:insert="~{fragments/message :: args(true)}" />
     <th:block th:insert="~{fragments/message-list :: list(${messages})}" />
 </th:block>
