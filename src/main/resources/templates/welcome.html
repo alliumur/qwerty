@@ -5,7 +5,7 @@
 <th:block th:if="${false}" th:fragment="content">
     <h4>Witamy!</h4>
     <div>Jesteś na portalu qwerty. Tu znajdziesz osobę z którą będzie mógł pisać.</div>
-    <a th:if="${isAuten}" href="/index">Login</a>
+    <a th:if="${#httpServletRequest.remoteUser == null}" href="/index">Login</a>
 </th:block>
 
 <body th:include="~{index :: body('welcome')}" />

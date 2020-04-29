@@ -101,7 +101,7 @@ public class MainController {
             @RequestParam(required = false) Message message
     ){
         User user = userService.getUser(username);
-        model.addAttribute("editable", currentUser.equals(user));
+        model.addAttribute("editable", currentUser.getUsername().equals(username));
         model.addAttribute("username", username);
         model.addAttribute("isSubscribe", user.getSubscribers().contains(currentUser));
         model.addAttribute("subscriptionsCount", user.getSubscriptions().size());
